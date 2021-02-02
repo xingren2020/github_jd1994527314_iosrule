@@ -4,7 +4,7 @@
 -------------------------------------------------
    File     : TG Bot
    Author   : 红鲤鱼与绿鲤鱼与驴
-   date     : 2021-2-1 9:32 
+   date     : 2021-2-2 21:32 
    Desc     : 公众号iosrule,编程测试与学习
    Gamerule: Tg群，微信学习，请勿用于非法用途
 -------------------------------------------------
@@ -24,6 +24,10 @@ from dateutil import tz
 tg_bot_id=''
 tg_member_id=''
 tg_group_id=''
+tg_new_id=''
+tg_bot_cmd=''
+longid=0
+upid=0
 
 osenviron={}
 telelist=[]
@@ -47,8 +51,6 @@ IDlist=[]
 
 
 
-
-
 def bot_loadfile():
    global SGlist,NSlist,MClist,IDlist
    try:
@@ -60,13 +62,36 @@ def bot_loadfile():
    except Exception as e:
       msg=str(e)
       print('bot_loadfile'+msg)
+      
+def bot_update():
+   global longid,upid
+   try:
+      longid+=1
+      ufo=''
+      if longid>10:
+        ufo=tg_new_id+str(upid)
+        longid=0
+      else:
+      	ufo=tg_bot_id
+      res=requests.get(ufo,timeout=200).json()
+      if 'result' in res:
+         upid=res["result"][len(res["result"])- 1]
+      return res
+   except Exception as e:
+      msg=str(e)
+      print('bot_update'+msg)
+      
 def bot_loadmsg():
    try:
       global msglist
       username=''
       msgtext=''
       msglist=[]
-      res=requests.get(tg_bot_id,timeout=200).json()
+      res=bot_update()
+      print(res)
+      if not 'result' in res:
+        print('退出')
+        return 
       if len(res['result'])==0:
         print('退出')
         return 
@@ -103,7 +128,7 @@ def bot_loadmsg():
       #print(msglist)
    except Exception as e:
       msg=str(e)
-      print('loadbotmsg'+msg)
+      print('bot_loadmsg'+msg)
 def bot_sendmsg(id,title,txt):
    try:
       txt=urllib.parse.quote(txt)
@@ -130,7 +155,7 @@ def bot_chat(title,ckmsg,postmsg):
           print('bot第'+str(i)+'次运行中:',str(checktm),str(txttm))
           if checktm<60:
              print('机器人开始回复'+ckmsg)
-             id=msglist[i][0]
+             id=str(msglist[i][0])
              bot_sendmsg(id,title,postmsg)
              time.sleep(2)
    except Exception as e:
@@ -140,7 +165,7 @@ def bot_chat(title,ckmsg,postmsg):
 def bot_check():
    try:
       msg=['/help','提交码']
-      menu=['1.活动字母简写,水果(SG),年兽(NS)\n2.SGxxxxxxxxx@yyyyyyyyy@zzzzzzz\nNSzzzzzzzzz@ggggggggggghgh\n3.不同活动互助码用换行开始,格式不对机器人不提交\n4.码提交后30-80秒后机器人确认回复.\n5.使用方法关注tg私人群邀请进去','您的JD互助码已经提交====']
+      menu=['1.活动字母简写,水果(SG),年兽(NS)\n2.提交码SGxxxxxxxxx@yyyyyyyyy@zzzzzzz\nNSzzzzzzzzz@ggggggggggghgh\n3.不同活动互助码用换行开始,格式不对机器人不提交\n4.码提交后30-80秒后机器人确认回复已提交.\n5.使用方法关注tg私人群邀请进去','您的JD互助码已经提交====']
       bot_chat('帮助功能:',msg[0],menu[0])
       bot_sub('提交功能:',msg[1],menu[1])
    except Exception as e:
@@ -168,7 +193,7 @@ def bot_sub(title,ckmsg,postmsg):
                SGlist= msg_clean(msglist[i][num],'SG')
                MClist=msg_clean(msglist[i][num],'MC')
                NSlist=msg_clean(msglist[i][num],'NS')
-               id=msglist[i][0]
+               id=str(msglist[i][0])
                print('机器人开始回复'+str(id)+':::'+ckmsg)
                if id in IDlist:
                  bot_sendmsg(id,title,'您已经提交过了\n')
@@ -176,7 +201,6 @@ def bot_sub(title,ckmsg,postmsg):
                  continue
                else:
                   IDlist.append(id)
-                  
                   bot_sendmsg(id,title,postmsg+'后台更新需要1个小时左右\n'+bot_che())
                   time.sleep(2)
              
@@ -204,17 +228,11 @@ def msg_clean(msg,ckmsg):
       msg=str(e)
       print('msg_clean'+msg)
 def bot_che():
-   other=f'''【目前上车人数】:{len(IDlist)}
-             【SG数】:{len(SGlist)}
-             【MC数】:{len(MClist)}
-             【NS数】:{len(NSlist)}
-            
-            
-            '''
-        
+   other='【目前上车人数】'+str(len(IDlist))+'【SG数】'+str(len(SGlist))+'【MC数】'+str(len(MClist))+'【NS数】'+str(len(NSlist))+'#'
    return other
 
 
+    
 def tg_notice(x):
    if x==1:
      bot_sendmsg(tg_group_id,'净网行动提示:','网警95327来了')
@@ -270,7 +288,7 @@ def clock(func):
     
 
 def loaddata():
-   global tg_bot_id,tg_member_id,tg_group_id
+   global tg_bot_id,tg_member_id,tg_group_id,tg_bot_cmd
    if "tg_bot_id" in os.environ:
       tg_bot_id = os.environ["tg_bot_id"]
    if "tg_bot_id" in osenviron:
@@ -292,9 +310,25 @@ def loaddata():
    if not tg_group_id:
        print(f'''【通知参数】 is empty,DTask is over.''')
        exit()
-       
+   if 'tg_new_id' in os.environ:
+      tg_new_id = os.environ["tg_new_id"]
+   if "tg_new_id" in osenviron:
+      tg_new_id = osenviron["tg_new_id"]
+   if not tg_new_id:
+       print(f'''【通知参数】 is empty,DTask is over.''')
+       exit()
+   if 'tg_bot_cmd' in os.environ:
+      tg_bot_cmd = os.environ["tg_bot_cmd"]
+   if "tg_bot_cmd" in osenviron:
+      tg_bot_cmd = osenviron["tg_bot_cmd"]
+   if not tg_bot_cmd:
+       print(f'''【通知参数】 is empty,DTask is over.''')
+       exit()
 def bot_inter():
-   for i in range(90):
+   for i in range(80):
+    loaddata()
+    if tg_bot_cmd=='886':
+        break
     bot_loadmsg()
     bot_check()
     print('【'+str(i+1)+'】次运行完毕=======')
@@ -314,7 +348,7 @@ def start():
    
    print('Localtime',datetime.now(tz=tz.gettz('Asia/Shanghai')).strftime("%Y-%m-%d %H:%M:%S", ))
    bot_loadfile()
-   loaddata()
+   
    tg_notice(1)
    bot_inter()
    bot_print()
