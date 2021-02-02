@@ -3,7 +3,7 @@ name: JD_TG
 on:
   push:
       branches:
-          - main
+          - cs
   schedule:
     - cron: '15 8-13 * * *'
   watch:
@@ -35,4 +35,4 @@ jobs:
           git config --global user.email "1994527314@qq.com" 
           git add . 
           git commit -m 'upload 写入结果'  
-          git push -u origin main
+          git push -u origin cs
