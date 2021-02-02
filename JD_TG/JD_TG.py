@@ -294,7 +294,7 @@ def loaddata():
        exit()
        
 def bot_inter():
-   for i in range(30):
+   for i in range(90):
     bot_loadmsg()
     bot_check()
     print('【'+str(i+1)+'】次运行完毕=======')
