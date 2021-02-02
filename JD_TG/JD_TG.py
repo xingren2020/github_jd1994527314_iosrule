@@ -325,7 +325,7 @@ def loaddata():
        print(f'''【通知参数】 is empty,DTask is over.''')
        exit()
 def bot_inter():
-   for i in range(80):
+   for i in range(30):
     loaddata()
     if tg_bot_cmd=='886':
         break
@@ -348,7 +348,7 @@ def start():
    
    print('Localtime',datetime.now(tz=tz.gettz('Asia/Shanghai')).strftime("%Y-%m-%d %H:%M:%S", ))
    bot_loadfile()
-   
+   loaddata()
    tg_notice(1)
    bot_inter()
    bot_print()
