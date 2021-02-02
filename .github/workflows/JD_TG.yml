@@ -1,0 +1,38 @@
+name: JD_TG
+
+on:
+  push:
+      branches:
+          - main
+  schedule:
+    - cron: '15 16-19 * * *'
+  watch:
+    types: [started]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: 'Set up Python'
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+         
+      - name: 'Install requirements'
+        run: pip install -r ./JD_TG/TG群专用.txt 
+       
+      - name: '公众号iosrule' 
+        run: python3 ./JD_TG/JD_TG.py 
+        env:
+            tg_group_id: ${{ secrets.tg_group_id }}
+            tg_member_id: ${{ secrets.tg_member_id }}
+            tg_bot_id: ${{ secrets.tg_bot_id }}
+      - name: Upload to this repo
+        run: |
+          git config --global user.name "jd1994527314"
+          git config --global user.email "1994527314@qq.com" 
+          git add . 
+          git commit -m 'upload 写入结果'  
+          git push -u origin main
