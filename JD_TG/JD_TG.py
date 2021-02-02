@@ -230,7 +230,7 @@ def bot_wr(filename,hdname,JDlist):
      JDjson["Sort"]=hdname+"数据"
      JDjson['Update_Time']=datetime.now(tz=tz.gettz('Asia/Shanghai')).strftime("%Y-%m-%d %H:%M:%S.%f", )
      if len(JDlist)>0:
-        with open("./"+filename,"w") as f:
+        with open("./JD_TG/"+filename,"w") as f:
           json.dump(JDjson,f)
           print(hdname+"写入文件完成...个数:"+str(len(JDlist)))
      else:
@@ -243,7 +243,7 @@ def bot_rd(filename,hd):
    try:
      JDjson={}
      xlist=[]
-     with open("./"+filename,"r",encoding='utf8') as f:
+     with open("./JD_TG/"+filename,"r",encoding='utf8') as f:
        JDjson=json.load(f)
        if JDjson['code']==200:
          xlist=JDjson['data']
@@ -296,7 +296,7 @@ def loaddata():
        exit()
        
 def bot_inter():
-   for i in range(60):
+   for i in range(10):
     bot_loadmsg()
     bot_check()
     print('【'+str(i+1)+'】次运行完毕=======')
