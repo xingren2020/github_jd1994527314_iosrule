@@ -254,9 +254,7 @@ def bot_rd(filename,hd):
       print('bot_rd:'+msg)
    
 def tm10():
-   Localtime=datetime.now(tz=tz.gettz('Asia/Shanghai')).strftime("%Y-%m-%d %H:%M:%S.%f", )
-   timeArray = datetime.strptime(Localtime, "%Y-%m-%d %H:%M:%S.%f")
-   timeStamp = int(time.mktime(timeArray.timetuple()))
+   timeStamp=int(time.time())
    return timeStamp
    
 def clock(func):
@@ -296,7 +294,7 @@ def loaddata():
        exit()
        
 def bot_inter():
-   for i in range(10):
+   for i in range(30):
     bot_loadmsg()
     bot_check()
     print('【'+str(i+1)+'】次运行完毕=======')
