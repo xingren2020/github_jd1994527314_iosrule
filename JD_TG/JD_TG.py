@@ -325,7 +325,7 @@ def loaddata():
        print(f'''【通知参数】 is empty,DTask is over.''')
        exit()
 def bot_inter():
-   for i in range(30):
+   for i in range(80):
     loaddata()
     if tg_bot_cmd=='886':
         break
