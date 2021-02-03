@@ -63,7 +63,7 @@ def bot_update():
    try:
       longid+=1
       ufo=''
-      if longid>10:
+      if longid>4:
         ufo=tg_new_id+str(upid)
         longid=0
       else:
@@ -135,6 +135,7 @@ def bot_sendmsg(id,title,txt):
       print(id+'_bot_sendmsg_'+msg)
 def bot_chat(title,ckmsg,postmsg):
    try:
+       
        print('bot_chat_'+title+'循环次数:',str(len(msglist)))
        if len(msglist)==0:
          return
@@ -147,7 +148,7 @@ def bot_chat(title,ckmsg,postmsg):
           #print('TG时间:'+str(txttm)+'-'+datetime.fromtimestamp(txttm).strftime('%Y-%m-%d %H:%M:%S')+'\n')
           checktm=tm10()-txttm
           print('bot第'+str(i)+'次运行中:',str(checktm),str(txttm))
-          if checktm<60:
+          if checktm<32:
              print('机器人开始回复'+ckmsg)
              id=str(msglist[i][0])
              bot_sendmsg(id,title,postmsg)
@@ -160,10 +161,11 @@ def bot_check():
    try:
       msg=['/help','/submit','/start']
       menu=['1.活动字母简写,水果(SG),年兽(NS)等，回复菜单:/help,/start,/submit\n2.不同活动互助码用换行开始,格式不对机器人不提交\n3.码提交后30-80秒后机器人确认回复已提交.\n4.使用方法关注tg私人群邀请进去','submit+SGxxxxxxxxx@yyyyyyyyy@zzzzzzz\nNSzzzzzzzzz@ggggggggggghgh']
+      
       bot_chat('帮助功能:',msg[0],menu[0])
       bot_chat('查询功能:',msg[2],bot_che())
       bot_chat('提交格式(需要+号):',msg[1],menu[1])
-      bot_sub('提交互助码中...:','submit+',menu[1])
+      bot_sub('提交互助码中===:','submit+',menu[1])
    except Exception as e:
       msg=str(e)
       print('bot_check:'+msg)
@@ -184,7 +186,7 @@ def bot_sub(title,ckmsg,postmsg):
                txttm=msglist[i][j+1]
           checktm=tm10()-txttm
           print('bot第'+str(i)+'次运行中:',str(checktm),str(txttm))
-          if checktm<60:
+          if checktm<32:
               if num>0:
                id=str(msglist[i][0])
                msg=msglist[i][num]
@@ -236,7 +238,9 @@ def msg_clean(msg,ckmsg):
       print('msg_clean'+msg)
 def bot_che():
    print('统计\n')
+ 
    other='【目前上车人数】'+str(len(IDlist))+'\n【SG互助码数】'+str(len(SGlist))+'\n【MC互助码数】'+str(len(MClist))+'\n【NS互助码数】'+str(len(NSlist))
+   print(other)
    return other
 
 
@@ -274,11 +278,12 @@ def bot_rd(filename,hd):
        if JDjson['code']==200:
          xlist=JDjson['data']
          print('读取'+hd+'文件完成...个数:'+str(len(xlist)))
-         return xlist
+     
    except Exception as e:
       msg=str(e)
       print('bot_rd:'+msg)
-   
+      xlist=[]
+   return xlist
 def tm10():
    timeStamp=int(time.time())
    return timeStamp
@@ -296,7 +301,7 @@ def clock(func):
     
 
 def loaddata():
-   global tg_bot_id,tg_member_id,tg_group_id,tg_bot_cmd
+   global tg_bot_id,tg_member_id,tg_group_id,tg_bot_cmd,tg_new_id
    if "tg_bot_id" in os.environ:
       tg_bot_id = os.environ["tg_bot_id"]
    if "tg_bot_id" in osenviron:
@@ -333,15 +338,15 @@ def loaddata():
        print(f'''【通知参数】 is empty,DTask is over.''')
        exit()
 def bot_inter():
-   for i in range(60):
+   for i in range(100):
     loaddata()
     if tg_bot_cmd=='886':
         break
     bot_loadmsg()
     bot_check()
     print('【'+str(i+1)+'】次运行完毕=======')
-    print('心跳包运行中.....稍等30秒')
-    time.sleep(30)
+    print('心跳包运行中.....稍等15秒')
+    time.sleep(15)
    
 
 def bot_print():
