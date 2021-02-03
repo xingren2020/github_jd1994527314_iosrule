@@ -37,11 +37,6 @@ idlist=[]
 uslist=[]
 
 
-
-
-
-
-
 SGlist=[]
 NSlist=[]
 MClist=[]
@@ -88,7 +83,6 @@ def bot_loadmsg():
       msgtext=''
       msglist=[]
       res=bot_update()
-      print(res)
       if not 'result' in res:
         print('退出')
         return 
@@ -150,7 +144,7 @@ def bot_chat(title,ckmsg,postmsg):
           for j in range(len(msglist[i])):
             if msglist[i][j]==ckmsg:
                txttm=msglist[i][j+1]
-          print('TG时间:'+str(txttm)+'-'+datetime.fromtimestamp(txttm).strftime('%Y-%m-%d %H:%M:%S')+'\n')
+          #print('TG时间:'+str(txttm)+'-'+datetime.fromtimestamp(txttm).strftime('%Y-%m-%d %H:%M:%S')+'\n')
           checktm=tm10()-txttm
           print('bot第'+str(i)+'次运行中:',str(checktm),str(txttm))
           if checktm<60:
@@ -164,10 +158,12 @@ def bot_chat(title,ckmsg,postmsg):
       
 def bot_check():
    try:
-      msg=['/help','提交码']
-      menu=['1.活动字母简写,水果(SG),年兽(NS)\n2.提交码SGxxxxxxxxx@yyyyyyyyy@zzzzzzz\nNSzzzzzzzzz@ggggggggggghgh\n3.不同活动互助码用换行开始,格式不对机器人不提交\n4.码提交后30-80秒后机器人确认回复已提交.\n5.使用方法关注tg私人群邀请进去','您的JD互助码已经提交====']
+      msg=['/help','/submit','/start']
+      menu=['1.活动字母简写,水果(SG),年兽(NS)等，回复菜单:/help,/start,/submit\n2.不同活动互助码用换行开始,格式不对机器人不提交\n3.码提交后30-80秒后机器人确认回复已提交.\n4.使用方法关注tg私人群邀请进去','submit+SGxxxxxxxxx@yyyyyyyyy@zzzzzzz\nNSzzzzzzzzz@ggggggggggghgh']
       bot_chat('帮助功能:',msg[0],menu[0])
-      bot_sub('提交功能:',msg[1],menu[1])
+      bot_chat('查询功能:',msg[2],bot_che())
+      bot_chat('提交格式(需要+号):',msg[1],menu[1])
+      bot_sub('提交互助码中...:','submit+',menu[1])
    except Exception as e:
       msg=str(e)
       print('bot_check:'+msg)
@@ -190,18 +186,28 @@ def bot_sub(title,ckmsg,postmsg):
           print('bot第'+str(i)+'次运行中:',str(checktm),str(txttm))
           if checktm<60:
               if num>0:
+               id=str(msglist[i][0])
+               msg=msglist[i][num]
+               fn=msg.find('submit+')
+               msg=msg.strip()[fn+7:len(msg)].strip()
+               if(len(msg)<5):
+                 print('机器人开始回复'+str(id)+':::'+ckmsg)
+                 bot_sendmsg(id,title,'您提交的互助码无效.请按照格式提交,回复/help查看\n')
+                 return 
                SGlist= msg_clean(msglist[i][num],'SG')
                MClist=msg_clean(msglist[i][num],'MC')
                NSlist=msg_clean(msglist[i][num],'NS')
-               id=str(msglist[i][0])
+               
                print('机器人开始回复'+str(id)+':::'+ckmsg)
                if id in IDlist:
-                 bot_sendmsg(id,title,'您已经提交过了\n')
+                 bot_sendmsg(id,'温馨提示','您已经提交过了,如需要重新提交，联系管理员处理。\n')
                  time.sleep(2)
                  continue
                else:
                   IDlist.append(id)
-                  bot_sendmsg(id,title,postmsg+'后台更新需要1个小时左右\n'+bot_che())
+                  print('调试::::')
+                  bot_sendmsg(id,title,'互助码提交数据库更新需要1个小时左右')
+                  bot_sendmsg(id,'当前缓存统计:',bot_che())
                   time.sleep(2)
              
    except Exception as e:
@@ -211,7 +217,8 @@ def bot_sub(title,ckmsg,postmsg):
 def msg_clean(msg,ckmsg):
    try:
      xlist=[]
-     msg=msg.strip()[3:len(msg)]
+     fn=msg.find('submit+')
+     msg=msg.strip()[fn+7:len(msg)]
      if msg.find(ckmsg)>=0:
        s1=msg.strip().split('\n')
        for i in s1:
@@ -228,7 +235,8 @@ def msg_clean(msg,ckmsg):
       msg=str(e)
       print('msg_clean'+msg)
 def bot_che():
-   other='【目前上车人数】'+str(len(IDlist))+'【SG数】'+str(len(SGlist))+'【MC数】'+str(len(MClist))+'【NS数】'+str(len(NSlist))+'#'
+   print('统计\n')
+   other='【目前上车人数】'+str(len(IDlist))+'\n【SG互助码数】'+str(len(SGlist))+'\n【MC互助码数】'+str(len(MClist))+'\n【NS互助码数】'+str(len(NSlist))
    return other
 
 
@@ -243,7 +251,7 @@ def bot_wr(filename,hdname,JDlist):
    try:
      JDjson={}
      JDjson['code']=200
-     JDjson['data']=JDlist
+     JDjson['data']=random.shuffle(JDlist)
      JDjson["2021"]="仅仅作为测试tg互助码思路,不做更新和解释,by红鲤鱼与绿鲤鱼与驴，2021.1.30"
      JDjson["Sort"]=hdname+"数据"
      JDjson['Update_Time']=datetime.now(tz=tz.gettz('Asia/Shanghai')).strftime("%Y-%m-%d %H:%M:%S.%f", )
@@ -325,7 +333,7 @@ def loaddata():
        print(f'''【通知参数】 is empty,DTask is over.''')
        exit()
 def bot_inter():
-   for i in range(80):
+   for i in range(70):
     loaddata()
     if tg_bot_cmd=='886':
         break
