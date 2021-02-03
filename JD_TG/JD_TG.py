@@ -70,7 +70,7 @@ def bot_update():
       	ufo=tg_bot_id
       res=requests.get(ufo,timeout=200).json()
       if 'result' in res:
-         upid=res["result"][len(res["result"])- 1]
+         upid=res["result"][len(res["result"])- 1]["update_id"]
       return res
    except Exception as e:
       msg=str(e)
@@ -333,7 +333,7 @@ def loaddata():
        print(f'''【通知参数】 is empty,DTask is over.''')
        exit()
 def bot_inter():
-   for i in range(70):
+   for i in range(10):
     loaddata()
     if tg_bot_cmd=='886':
         break
