@@ -30,6 +30,13 @@ tg_bot_cmd=''
 longid=0
 upid=0
 
+#远程配置
+heartnum=100
+r=2
+
+
+
+
 osenviron={}
 telelist=[]
 result=''
@@ -249,21 +256,25 @@ def bot_che():
 
     
 def tg_notice(x):
-   if x==1:
+   if x==1 and r==2:
      bot_sendmsg(tg_group_id,'净网行动提示:','网警95327来了')
-   elif x==2:
+   elif x==2 and r==2:
       bot_sendmsg(tg_group_id,'净网行动提示:','网警95327暂时离开')
 
 def bot_wr(filename,hdname,JDlist):
    try:
      JDjson={}
+     random.shuffle(JDlist)
      JDjson['code']=200
-     JDjson['data']=random.shuffle(JDlist)
+     JDjson['data']=JDlist
      JDjson["2021"]="仅仅作为测试tg互助码思路,不做更新和解释,by红鲤鱼与绿鲤鱼与驴，2021.1.30"
      JDjson["Sort"]=hdname+"数据"
      JDjson['Update_Time']=datetime.now(tz=tz.gettz('Asia/Shanghai')).strftime("%Y-%m-%d %H:%M:%S.%f", )
      if len(JDlist)>0:
-        with open("./JD_TG/"+filename,"w") as f:
+        path=''
+        if r==2:
+          path='JD_TG/'
+        with open("./"+path+filename,"w") as f:
           json.dump(JDjson,f)
           print(hdname+"写入文件完成...个数:"+str(len(JDlist)))
      else:
@@ -276,10 +287,16 @@ def bot_rd(filename,hd):
    try:
      JDjson={}
      xlist=[]
-     with open("./JD_TG/"+filename,"r",encoding='utf8') as f:
+     path=''
+     if r==2:
+       path='JD_TG/'
+     with open("./"+path+filename,"r",encoding='utf8') as f:
        JDjson=json.load(f)
        if JDjson['code']==200:
-         xlist=JDjson['data']
+         if JDjson['data']==None:
+             xlist=[]
+         else:
+              xlist=JDjson['data']
          print('读取'+hd+'文件完成...个数:'+str(len(xlist)))
      
    except Exception as e:
@@ -341,7 +358,7 @@ def loaddata():
        print(f'''【通知参数】 is empty,DTask is over.''')
        exit()
 def bot_inter():
-   for i in range(100):
+   for i in range(heartnum):
     loaddata()
     if tg_bot_cmd=='886':
         break
