@@ -16,6 +16,7 @@ import time
 import timeit
 import os
 import re
+import random
 import urllib
 from datetime import datetime
 from dateutil import tz
@@ -64,6 +65,8 @@ def bot_update():
       longid+=1
       ufo=''
       if longid>4:
+        print('clean=======:::::=')
+        print(len(tg_new_id))
         ufo=tg_new_id+str(upid)
         longid=0
       else:
