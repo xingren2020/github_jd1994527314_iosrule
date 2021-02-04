@@ -53,7 +53,7 @@ uslist=[]
 #=====================================
 command=['/help','/submit','/start','/admin_delid','/admin_delcode','/admin_viewcode','/admin_reboot']
 description=['帮助功能:','提交功能','圈友查询','管理员删除数据库群友id','管理员删除互助码','管理员查询互助码','管理员重启机器人']
-hd_nm=['ID@圈友ID','GC@农场','NS@年兽','MC@萌宠','GC@惊喜工厂','ZD@种豆']
+hd_nm=['ID@圈友ID','NC@农场','NS@年兽','MC@萌宠','GC@惊喜工厂','ZD@种豆']
 hd_codelist=[]
 bot_timeout=15
 bot_fix=0
