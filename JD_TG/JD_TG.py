@@ -216,9 +216,6 @@ def bot_chat():
           m1=0
           m2=0
           id=str(msglist[i][0])
-          if not me(id):
-             
-             continue
           nm=msglist[i][1]
           if len(msglist[i])==0:
             continue
