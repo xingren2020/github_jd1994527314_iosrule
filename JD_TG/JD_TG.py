@@ -92,7 +92,7 @@ def ac_data():
       global ac_database
       print('\n成功上车人数')
       ac_database='1.【已注册权限人数】'+str(len(hd_memlist))+'\n'+'2.【成功上车人数】'+str(len(hd_codelist[0]))+'\n'
-      for i in range(2,len(hd_codelist)):
+      for i in range(1,len(hd_codelist)):
         ac_database+='【'+hd_nm[i][3:len(hd_nm[i])]+'互助码数】'+str(len(hd_codelist[i]))+'\n'
       print(ac_database)
    except Exception as e:
@@ -476,8 +476,8 @@ def msg_clean(msg,ckmsg):
       print('msg_clean'+msg)
 def bot_che():
    print('\n统计缓存上车')
-   other='/n1.【注册权限人数】'+str(len(hd_memlist))+'\n'+'2.【总上车人数】'+str(len(hd_codelist[0]))
-   for i in range(2,len(hd_codelist)):
+   other='\n统计缓存上车\n1.【注册权限人数】'+str(len(hd_memlist))+'\n'+'2.【总上车人数】'+str(len(hd_codelist[0]))+'\n'
+   for i in range(1,len(hd_codelist)):
      other+='【'+hd_nm[i][3:len(hd_nm[i])]+'互助码数】'+str(len(hd_codelist[i]))+'\n'
    print(ac_database+other)
    return ac_database+other
