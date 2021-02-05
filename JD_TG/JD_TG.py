@@ -33,12 +33,12 @@ longid=0
 upid=0
 reboot=''
 #远程配置
-heartnum=100
-r=2
+#heartnum=100
+#r=2
 
 #本地配置
-#heartnum=10
-#r=1
+heartnum=10
+r=1
 
 ac_database=''
 osenviron={}
@@ -301,11 +301,9 @@ def bot_admin(id,mlist,pop):
     tmplist=[]
     global reboot
     print('管理员数据验证=====',mlist)
-    print('id'+tg_admin_id)
     if id!=tg_admin_id:
        return 
     if pop==2:
-      print('222222')
       if mlist[0]=='/admin_viewcode':
          if len(str(mlist[1]))>4:
             for data in hd_codelist:
@@ -492,6 +490,7 @@ def ac_load():
    if not tg_admin_id:
         exit()
 def bot_trans():
+  try:
    for i in range(heartnum):
     ac_load()
     if reboot==str(tg_bot_cmd):
@@ -502,18 +501,18 @@ def bot_trans():
     print('【'+str(i+1)+'】次运行完毕=======')
     print('心跳包运行中.....稍等'+str(bot_timeout)+'秒')
     time.sleep(bot_timeout)
-   
+  except Exception as e:
+      msg=str(e)
+      print(msg)
 
 def bot_exit():
    print('程序退出写入数据中稍后🔔=======')
-   print(hd_codelist)
    print('检验数据:','活动列表个数:'+str(len(hd_codelist)),'活动个数:'+str(len(hd_nm)))
    for i in range(len(hd_codelist)):
      bot_wr(hd_nm[i][0:2],hd_nm[i][3:len(hd_nm[i])],hd_codelist[i])
    print('程序结束🔔=======')
 @clock
 def start():
-   
    print('Localtime',datetime.now(tz=tz.gettz('Asia/Shanghai')).strftime("%Y-%m-%d %H:%M:%S", ))
    bot_load()
    ac_load()
