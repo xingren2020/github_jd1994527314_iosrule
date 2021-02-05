@@ -184,7 +184,7 @@ def bot_chat():
        global bot_fix
        postmsg=''
        stoploop=False
-       print(msglist)
+       #print(msglist)
        print('会话个数:',str(len(msglist)))
        if len(msglist)==0:
          return
