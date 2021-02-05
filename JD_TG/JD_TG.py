@@ -230,23 +230,24 @@ def bot_chat():
           print('开始时间:'+datetime.fromtimestamp(msglist[i][3]).strftime('%Y-%m-%d %H:%M:%S'))
           print('结束时间:'+datetime.fromtimestamp(xo1).strftime('%Y-%m-%d %H:%M:%S'))
           checktm=int(tm10())-xo1
+          checkmt=int(tm10())-xo2
           print('【会话+'+str(i+1)+'+】超时'+str(checktm)+'检验:'+str(bot_fix))
+          print('【会话+'+str(i+1)+'+】超时'+str(checkmt)+'检验:'+str(bot_fix))
           
-          if checktm>bot_timeout*2+5+bot_fix:
+          if checktm>bot_timeout*2+3+bot_fix:
              print('机器人接收上个信息超时.....')
              bot_fix=0
              continue
-             
           if len(msglist[i])>4:
-            
-            newmsglist.append(mm1.strip())
-            newmsglist.append(mm2.strip())
-            bot_checkwrong(id,nm,newmsglist,2)
-            bot_admin(id,newmsglist,2)
-          
-          	
+             if checkmt<bot_timeout*2+5+bot_fix:
+                 newmsglist.append(mm1.strip())
+                 newmsglist.append(mm2.strip())
+             else:
+             	   newmsglist.append(mm2.strip())
+             bot_checkwrong(id,nm,newmsglist,1)
+             bot_admin(id,newmsglist,1)
+    
           elif len(msglist[i])==4:
-            
             newmsglist.append(mm2.strip())
             bot_checkwrong(id,nm,newmsglist,1)
             bot_admin(id,newmsglist,1)
@@ -271,10 +272,7 @@ def bot_checkwrong(id,nm,mlist,pop):
             return
           postmsg=bot_che()
           bot_sendmsg(id,'统计功能',postmsg)
-          
-          bot_sendmsg(id,bot_zhuce[0],bot_zhuce[1])
     elif pop==2:
-      
       if mlist[0] in command and mlist[1] in command:
         for i in range(2):
            if mlist[i]=='/help':
@@ -283,6 +281,8 @@ def bot_checkwrong(id,nm,mlist,pop):
              postmsg=tback[0]+help_update()
              bot_sendmsg(id,'帮助功能',postmsg)
            elif mlist[i]=='/start':
+               if not me(id):
+                  return
                postmsg=bot_che()
                bot_sendmsg(id,'统计功能',postmsg)
       elif mlist[0] in command and mlist[1] not in command:
