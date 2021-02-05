@@ -7,7 +7,7 @@
    date     : 2021-2-2 21:32 
    Desc     : 公众号iosrule,编程测试与学习
    Gamerule: Tg群，微信学习，请勿用于非法用途
-   update: 1.2021.2.4 修复管理员删除字符bug,修复下超时重置清0
+   update: 1.2021.2.4 修复管理员删除字符bug,修复下超时重置清0.2.修复超时逻辑判断，添加改版前上车人数据代码。调整活动简称。
 -------------------------------------------------
 """
 
@@ -36,9 +36,7 @@ reboot=''
 heartnum=100
 r=2
 
-#本地配置
-#heartnum=10
-#r=1
+
 
 ac_database=''
 osenviron={}
@@ -55,11 +53,11 @@ uslist=[]
 #=====================================
 command=['/help','/submit','/start','/admin_delid','/admin_delcode','/admin_viewcode','/admin_reboot']
 description=['帮助功能:','提交功能','圈友查询','管理员删除数据库群友id','管理员删除互助码','管理员查询互助码','管理员重启机器人']
-hd_nm=['ID@圈友ID','NC@农场','NS@年兽','MC@萌宠','JXGC@惊喜工厂','JDGC@京东工厂','ZD@种豆']
+hd_nm=['ID@圈友ID','NC@农场','NS@年兽','MC@萌宠','JC@惊喜工厂','DC@京东工厂','ZD@种豆']
 hd_codelist=[]
 bot_timeout=15
 bot_fix=0
-fixtime=10
+fixtime=15
 #=====================================
 def help_update():
    help=''
@@ -70,6 +68,8 @@ def help_update():
       pass
 
 
+      
+      
 def bot_load():
    global hd_codelist
    try:
@@ -113,6 +113,8 @@ def bot_update():
       msg=str(e)
       bot_fix=fixtime
       print('bot_update'+msg)
+      bot_sendmsg(tg_admin_id,'机器人超时',msg)
+      
       
 def bot_loadmsg():
    try:
@@ -121,6 +123,7 @@ def bot_loadmsg():
       msgtext=''
       msglist=[]
       res=bot_update()
+      
       if not 'result' in res:
         print('退出')
         return 
@@ -128,14 +131,18 @@ def bot_loadmsg():
         print('退出')
         return 
       i=0
+      username=''
       for data in res['result']:
         i+=1
         if data['message']['chat']['type']!='private':
            continue
         if 'username' in data['message']['chat']:
           username=data['message']['chat']['username']
-        else:
-          username=data['message']['chat']['first_name']+'_'+data['message']['chat']['last_name']
+        if 'first_name' in data['message']['chat']:
+          username+='_'+data['message']['chat']['first_name']+'_'+data['message']['chat']['first_name']
+        if 'last_name' in data['message']['chat']:
+             username+='_'+data['message']['chat']['last_name']
+             
         id=data['message']['chat']['id']
         if 'text' in data['message']:
           msgtext=data['message']['text']
@@ -174,16 +181,22 @@ def bot_sendmsg(id,title,txt):
       print(id+'_bot_sendmsg_'+msg)
 def bot_chat():
    try:
+       global bot_fix
        postmsg=''
-       global fixtime
        stoploop=False
-       print('循环次数:',str(len(msglist)))
+       print(msglist)
+       print('会话个数:',str(len(msglist)))
        if len(msglist)==0:
          return
        for i in range(len(msglist)):
+          print(str(i+1)+'.=================')
           txttm=0
           checktm=0
           newmsglist=[]
+          xo2=0
+          xo1=0
+          m1=0
+          m2=0
           id=str(msglist[i][0])
           nm=msglist[i][1]
           if len(msglist[i])==0:
@@ -191,16 +204,19 @@ def bot_chat():
           if len(msglist[i])>4:
             mm1=msglist[i][len(msglist[i])-4]
             mm2=msglist[i][len(msglist[i])-2]
-            xo1=msglist[i][len(msglist[i])-3]
-            xo2=msglist[i][len(msglist[i])-1]
+            xo2=msglist[i][len(msglist[i])-3]
+            xo1=msglist[i][len(msglist[i])-1]
           elif len(msglist[i])==4:
             xo1=msglist[i][len(msglist[i])-1]
             mm2=msglist[i][len(msglist[i])-2]
-          checktm=tm10()-xo1
-          print('超时检验秒:'+str(checktm))
-          if checktm>bot_timeout*2+fixtime:
+          print('开始时间:'+datetime.fromtimestamp(msglist[i][3]).strftime('%Y-%m-%d %H:%M:%S'))
+          print('结束时间:'+datetime.fromtimestamp(xo1).strftime('%Y-%m-%d %H:%M:%S'))
+          checktm=int(tm10())-xo1
+          print('【会话+'+str(i+1)+'+】超时'+str(checktm)+'检验:'+str(bot_fix))
+          
+          if checktm>bot_timeout*2+5+bot_fix:
              print('机器人接收上个信息超时.....')
-             fixtime=0
+             bot_fix=0
              continue
              
           if len(msglist[i])>4:
@@ -263,6 +279,7 @@ def bot_checkwrong(id,nm,mlist,pop):
                    continue
                  hd_codelist[i-1].append(code)
                postmsg=ll[3:len(ll)]+'活动共计提交'+str(len(postmsg.strip().split('@')))+'个互助码,其中'+str(allnum)+'个为有效互助码，其他为重复数据,1个小时后更新进数据库....'
+               _addid(id)
                break
             else:
                postmsg=nm+'请勿发送无效互助码....格式:活动简称大写字母+互助码,多个互助码用@连接,例如京东农场NC12333@885666@8556'
@@ -280,6 +297,9 @@ def bot_checkwrong(id,nm,mlist,pop):
        elif mlist[1]=='/start':
           postmsg=bot_che()
           bot_sendmsg(id,'统计功能',postmsg)
+       elif mlist[1]=='/submit':
+          postmsg='提交互助码太快,机器人判定无效操作,等待15秒执行提交操作,此时可以尝试其他命令.'
+          bot_sendmsg(id,'提交违规',postmsg)
       elif mlist[0] not in command and mlist[1] not in command:
         if mlist[0]==mlist[1]:
            postmsg=nm+'不要发送,重复内容...'
@@ -294,7 +314,17 @@ def bot_checkwrong(id,nm,mlist,pop):
       print('bot_checkwrong'+msg)
 
       
-
+def _addid(id):
+   global hd_codelist
+   try:
+     if id:
+        if not str(id) in hd_codelist[0]:
+            hd_codelist[0].append(str(id))
+   except Exception as e:
+       pass
+       
+       
+       
 def bot_admin(id,mlist,pop):
   try:
     postmsg=''
@@ -362,7 +392,7 @@ def bot_admin(id,mlist,pop):
           postmsg='检索code字符太短,需要完整字符串.'
         bot_sendmsg(tg_admin_id,'管理删除code功能',postmsg)
       elif mlist[0]=='/admin_reboot':
-        if mlist[1]==tg_bot_cmd:
+        if str(mlist[1])==str(tg_bot_cmd):
              reboot=str(tg_bot_cmd)
              postmsg='重启命令:正确'
         else:
@@ -504,6 +534,7 @@ def bot_trans():
   except Exception as e:
       msg=str(e)
       print(msg)
+      
 
 def bot_exit():
    print('程序退出写入数据中稍后🔔=======')
