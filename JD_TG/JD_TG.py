@@ -182,7 +182,6 @@ def bot_pubmsg(res):
            id=data['message']['from']['id']
            if not str(id) in  hd_memlist:
                hd_memlist.append(str(id))
-           me(id,1)
      print('注册圈友人数:'+str(len(hd_memlist)))
    except Exception as e:
       msg=str(e)
