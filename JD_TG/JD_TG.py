@@ -7,7 +7,7 @@
    date     : 2021-2-2 21:32 
    Desc     : 公众号iosrule,编程测试与学习
    Gamerule: Tg群，微信学习，请勿用于非法用途
-   update:   1.2021.2.4 修复管理员删除字符bug,修复下超时重置清0
+   update: 1.2021.2.4 修复管理员删除字符bug,修复下超时重置清0
 -------------------------------------------------
 """
 
@@ -33,12 +33,12 @@ longid=0
 upid=0
 reboot=''
 #远程配置
-#heartnum=100
-#r=2
+heartnum=100
+r=2
 
 #本地配置
-heartnum=10
-r=1
+#heartnum=10
+#r=1
 
 ac_database=''
 osenviron={}
