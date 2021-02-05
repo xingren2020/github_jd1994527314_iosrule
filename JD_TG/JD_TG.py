@@ -7,6 +7,7 @@
    date     : 2021-2-2 21:32 
    Desc     : 公众号iosrule,编程测试与学习
    Gamerule: Tg群，微信学习，请勿用于非法用途
+   update: 1.2021.2.4 修复管理员删除字符bug,修复下超时重置清0
 -------------------------------------------------
 """
 
@@ -50,6 +51,7 @@ uslist=[]
 
 
 
+
 #=====================================
 command=['/help','/submit','/start','/admin_delid','/admin_delcode','/admin_viewcode','/admin_reboot']
 description=['帮助功能:','提交功能','圈友查询','管理员删除数据库群友id','管理员删除互助码','管理员查询互助码','管理员重启机器人']
@@ -59,6 +61,15 @@ bot_timeout=15
 bot_fix=0
 fixtime=10
 #=====================================
+def help_update():
+   help=''
+   try:
+      help+='2.当前互助码活动(动态更新中):'+str(hd_nm)+'\n'
+      return help
+   except Exception as e:
+      pass
+
+
 def bot_load():
    global hd_codelist
    try:
@@ -73,8 +84,8 @@ def bot_load():
 def ac_data():
    try:
       global ac_database
-      print('\n数据库上车人数')
-      ac_database='【数据库上车人数】'+str(len(hd_codelist[0]))+'\n'
+      print('\n成功上车人数')
+      ac_database='1.【成功上车人数】'+str(len(hd_codelist[0]))+'\n'
       for i in range(1,len(hd_codelist)):
         ac_database+='【'+hd_nm[i][3:len(hd_nm[i])]+'互助码数】'+str(len(hd_codelist[i]))+'\n'
       print(ac_database)
@@ -147,7 +158,7 @@ def bot_loadmsg():
           
         
       print('圈友人数:'+str(len(msglist)))
-      print(msglist)
+      #print(msglist)
    except Exception as e:
       msg=str(e)
       print('bot_loadmsg'+msg)
@@ -164,6 +175,7 @@ def bot_sendmsg(id,title,txt):
 def bot_chat():
    try:
        postmsg=''
+       global fixtime
        stoploop=False
        print('循环次数:',str(len(msglist)))
        if len(msglist)==0:
@@ -188,10 +200,11 @@ def bot_chat():
           print('超时检验秒:'+str(checktm))
           if checktm>bot_timeout*2+fixtime:
              print('机器人接收上个信息超时.....')
+             fixtime=0
              continue
              
           if len(msglist[i])>4:
-            print('2222222')
+            
             newmsglist.append(mm1.strip())
             newmsglist.append(mm2.strip())
             bot_checkwrong(id,nm,newmsglist,2)
@@ -199,7 +212,7 @@ def bot_chat():
           
           	
           elif len(msglist[i])==4:
-            print('111111111')
+            
             newmsglist.append(mm2.strip())
             bot_checkwrong(id,nm,newmsglist,1)
             bot_admin(id,newmsglist,1)
@@ -216,21 +229,21 @@ def bot_checkwrong(id,nm,mlist,pop):
     if pop==1:
        
        if mlist[0]=='/help':
-          postmsg='京东互助码提交机器人测试中，请在对话框输入字符 /  查看对应指令再发送内容。每个京东活动互助码分开提交,格式:活动简称大写字母+互助码,多个互助码用@连接,例如京东农场NC12333@885666@8556'
+          postmsg='1.京东互助码提交机器人测试中，请在对话框输入字符 /  查看对应指令再发送内容。每个京东活动互助码分开提交,格式:活动简称大写字母+互助码,多个互助码用@连接,例如京东农场NC12333@885666@8556\n'+help_update()
           bot_sendmsg(id,'帮助功能',postmsg)
        elif mlist[0]=='/start':
           postmsg=bot_che()
-          bot_sendmsg(id,'查询功能',postmsg)
+          bot_sendmsg(id,'统计功能',postmsg)
     elif pop==2:
       
       if mlist[0] in command and mlist[1] in command:
         for i in range(2):
            if mlist[i]=='/help':
-             postmsg='京东互助码提交机器人测试中，请在对话框输入字符 /  查看对应指令再发送内容。每个京东活动互助码分开提交,格式:活动简称大写字母+互助码,多个互助码用@连接,例如京东农场NC12333@885666@8556'
+             postmsg='京东互助码提交机器人测试中，请在对话框输入字符 /  查看对应指令再发送内容。每个京东活动互助码分开提交,格式:活动简称大写字母+互助码,多个互助码用@连接,例如京东农场NC12333@885666@8556\n'+help_update()
              bot_sendmsg(id,'帮助功能',postmsg)
            elif mlist[i]=='/start':
                postmsg=bot_che()
-               bot_sendmsg(id,'查询功能',postmsg)
+               bot_sendmsg(id,'统计功能',postmsg)
       elif mlist[0] in command and mlist[1] not in command:
         if mlist[0]=='/submit':
           i=0
@@ -255,18 +268,18 @@ def bot_checkwrong(id,nm,mlist,pop):
                postmsg=nm+'请勿发送无效互助码....格式:活动简称大写字母+互助码,多个互助码用@连接,例如京东农场NC12333@885666@8556'
           bot_sendmsg(id,'提交功能',postmsg)
         elif mlist[0]=='/help':
-             postmsg='京东互助码提交机器人测试中，请在对话框输入字符 /  查看对应指令再发送内容。每个京东活动互助码分开提交,格式:活动简称大写字母+互助码,多个互助码用@连接,例如京东农场NC12333@885666@8556'
+             postmsg='京东互助码提交机器人测试中，请在对话框输入字符 /  查看对应指令再发送内容。每个京东活动互助码分开提交,格式:活动简称大写字母+互助码,多个互助码用@连接,例如京东农场NC12333@885666@8556\n'+help_update()
              bot_sendmsg(id,'帮助功能',postmsg)
         elif mlist[0]=='/start':
                postmsg=bot_che()
                bot_sendmsg(id,'查询功能',postmsg)
       elif mlist[0] not in command and mlist[1] in command:
        if mlist[1]=='/help':
-          postmsg='京东互助码提交机器人测试中，请在对话框输入字符 /  查看对应指令再发送内容。每个京东活动互助码分开提交,格式:活动简称大写字母+互助码,多个互助码用@连接,例如京东农场NC12333@885666@8556'
+          postmsg='京东互助码提交机器人测试中，请在对话框输入字符 /  查看对应指令再发送内容。每个京东活动互助码分开提交,格式:活动简称大写字母+互助码,多个互助码用@连接,例如京东农场NC12333@885666@8556\n'+help_update()
           bot_sendmsg(id,'查询功能',postmsg)
        elif mlist[1]=='/start':
           postmsg=bot_che()
-          bot_sendmsg(id,'提交功能',postmsg)
+          bot_sendmsg(id,'统计功能',postmsg)
       elif mlist[0] not in command and mlist[1] not in command:
         if mlist[0]==mlist[1]:
            postmsg=nm+'不要发送,重复内容...'
@@ -336,7 +349,7 @@ def bot_admin(id,mlist,pop):
             for i in range(1,len(hd_codelist)):
                for da in hd_codelist[i]:
                  if da==mlist[1]:
-                      data.remove(da)
+                      hd_codelist[i].remove(da)
             for i in range(1,len(hd_codelist)):
                for da in hd_codelist[i]:
                  if str(da)==str(mlist[1]):
@@ -352,10 +365,11 @@ def bot_admin(id,mlist,pop):
         bot_sendmsg(tg_admin_id,'管理删除code功能',postmsg)
       elif mlist[0]=='/admin_reboot':
         if mlist[1]==tg_bot_cmd:
-             reboot=tg_bot_cmd
+             reboot=str(tg_bot_cmd)
              postmsg='重启命令:正确'
         else:
               postmsg='重启命令:错误'
+        print(postmsg)
         bot_sendmsg(tg_admin_id,'管理重启功能',postmsg)
   except Exception as e:
       msg=str(e)
@@ -384,7 +398,7 @@ def msg_clean(msg,ckmsg):
       print('msg_clean'+msg)
 def bot_che():
    print('\n统计上车')
-   other='【当前总上车人数】'+str(len(hd_codelist[0]))+'\n'
+   other='\n2.【当前总上车人数】'+str(len(hd_codelist[0]))+'\n'
    for i in range(1,len(hd_codelist)):
      other+='【'+hd_nm[i][3:len(hd_nm[i])]+'互助码数】'+str(len(hd_codelist[i]))+'\n'
    print(ac_database+other)
@@ -406,6 +420,7 @@ def bot_wr(hdnm,des,JDlist):
      JDjson['data']=JDlist
      JDjson["2021"]="仅仅作为测试tg互助码思路,不做更新和解释,by红鲤鱼与绿鲤鱼与驴，2021.1.30"
      JDjson["Sort"]=hdnm+"数据"
+     
      JDjson['Update_Time']=datetime.now(tz=tz.gettz('Asia/Shanghai')).strftime("%Y-%m-%d %H:%M:%S.%f", )
      if len(JDlist)>0:
         path=''
@@ -467,18 +482,20 @@ def read_sec(secret):
    return globalid
 def ac_load():
    global tg_bot_id,tg_member_id,tg_group_id,tg_bot_cmd,tg_new_id,tg_admin_id
+
    tg_bot_id=read_sec('tg_bot_id')
    tg_member_id=read_sec('tg_member_id')
    tg_group_id=read_sec('tg_group_id')
    tg_bot_cmd=read_sec('tg_bot_cmd')
    tg_new_id=read_sec('tg_new_id')
    tg_admin_id=read_sec('tg_admin_id')
-   if not tg_new_id:
-       exit()
+   if not tg_admin_id:
+        exit()
 def bot_trans():
    for i in range(heartnum):
     ac_load()
-    if reboot==tg_admin_id:
+    if reboot==str(tg_bot_cmd):
+        print('接受命令,退出.......')
         break
     bot_loadmsg()
     bot_chat()
@@ -489,6 +506,7 @@ def bot_trans():
 
 def bot_exit():
    print('程序退出写入数据中稍后🔔=======')
+   print(hd_codelist)
    print('检验数据:','活动列表个数:'+str(len(hd_codelist)),'活动个数:'+str(len(hd_nm)))
    for i in range(len(hd_codelist)):
      bot_wr(hd_nm[i][0:2],hd_nm[i][3:len(hd_nm[i])],hd_codelist[i])
