@@ -46,6 +46,10 @@ ZD互助码1@互助码2@互助码3
 
 JN互助码1@互助码2@互助码3
 
+8.京东盲盒
+
+M互助码1@互助码2@互助码3
+
 二.码库调用链接(活动简写)
 
 https://raw.githubusercontent.com/jd1994527314/iosrule/cs/JD_TG/XX.json
