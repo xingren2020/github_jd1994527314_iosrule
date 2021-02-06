@@ -1,10 +1,19 @@
 # iosrule
 TG群专用库，微信公众号iosrule
 
+禁止fork本库  禁止fork本库   禁止fork本库
+禁止fork本库  禁止fork本库 禁止fork本库
 码库使用方法
 
-一.活动名称；\
-                加TG群注册，机器人提交\
+一.机器人提交活动码；
+
+互助码可以用大佬的JS脚本，一次获取活动的互助码：jd_get_share_code.js
+
+这里不提供，大家自己找
+
+
+ 加TG群注册，机器人提交
+                
 1.京东农场
 
 NC互助码1@互助码2@互助码3
@@ -25,11 +34,15 @@ JC互助码1@互助码2@互助码3
 
 DC互助码1@互助码2@互助码3
 
-6.种豆
+6.京东种豆
 
 ZD互助码1@互助码2@互助码3
 
+7.京喜农场
+
+J互助码1@互助码2@互助码3
 
 二.码库调用链接(活动简写)
 
-https://raw.githubusercontent.com/jd1994527314/iosrule/cs/JD_TG/XX.json\
+https://raw.githubusercontent.com/jd1994527314/iosrule/cs/JD_TG/XX.json
+
