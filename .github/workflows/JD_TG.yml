@@ -5,7 +5,7 @@ on:
       branches:
           - cs
   schedule:
-    - cron: '0 22,23,0-16 * * *'
+    - cron: '5 22,23,0-16 * * *'
   watch:
     types: [started]
 jobs:
