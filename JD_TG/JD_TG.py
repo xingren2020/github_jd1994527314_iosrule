@@ -49,7 +49,6 @@ uslist=[]
 
 
 
-
 #=====================================
 command=['/help','/submit','/start','/zhuce','/admin_delid','/admin_delcode','/admin_viewcode','/admin_reboot']
 description=['帮助功能:','提交功能','圈友查询','注册圈友权限','管理员删除数据库群友id','管理员删除互助码','管理员查询互助码','管理员重启机器人']
@@ -242,11 +241,12 @@ def bot_chat():
              if checkmt<bot_timeout*2+5+bot_fix:
                  newmsglist.append(mm1.strip())
                  newmsglist.append(mm2.strip())
+                 bot_checkwrong(id,nm,newmsglist,2)
+                 bot_admin(id,newmsglist,2)
              else:
-             	   newmsglist.append(mm2.strip())
-             bot_checkwrong(id,nm,newmsglist,1)
-             bot_admin(id,newmsglist,1)
-    
+                 newmsglist.append(mm2.strip())
+                 bot_checkwrong(id,nm,newmsglist,1)
+                 bot_admin(id,newmsglist,1)
           elif len(msglist[i])==4:
             newmsglist.append(mm2.strip())
             bot_checkwrong(id,nm,newmsglist,1)
@@ -260,7 +260,7 @@ def bot_chat():
 def bot_checkwrong(id,nm,mlist,pop):
   try:
     postmsg=''
-    print('通用数据验证=====',mlist)
+    print('通用数据验证====='+str(pop),mlist)
     if pop==1:
        if mlist[0]=='/help':
           if not me(id):
@@ -272,6 +272,8 @@ def bot_checkwrong(id,nm,mlist,pop):
             return
           postmsg=bot_che()
           bot_sendmsg(id,'统计功能',postmsg)
+       elif mlist[0]=='/zhuce':
+               me(id,1)
     elif pop==2:
       if mlist[0] in command and mlist[1] in command:
         for i in range(2):
@@ -285,6 +287,8 @@ def bot_checkwrong(id,nm,mlist,pop):
                   return
                postmsg=bot_che()
                bot_sendmsg(id,'统计功能',postmsg)
+           elif mlist[i]=='/zhuce':
+               me(id,1)
       elif mlist[0] in command and mlist[1] not in command:
         if mlist[0]=='/submit':
           i=0
@@ -380,7 +384,7 @@ def bot_admin(id,mlist,pop):
     postmsg=''
     tmplist=[]
     global reboot
-    print('管理员数据验证=====',mlist)
+    print('管理员数据验证====='+str(pop),mlist)
     if id!=tg_admin_id:
        return 
     if pop==2:
@@ -426,7 +430,7 @@ def bot_admin(id,mlist,pop):
           if boolres==True:
             for i in range(1,len(hd_codelist)):
                for da in hd_codelist[i]:
-                 if da==mlist[1]:
+                 if str(da).strip()==mlist[1]:
                       hd_codelist[i].remove(da)
             for i in range(1,len(hd_codelist)):
                for da in hd_codelist[i]:
@@ -454,26 +458,7 @@ def bot_admin(id,mlist,pop):
       print('bot_admin'+msg)
           
 
-def msg_clean(msg,ckmsg):
-   try:
-     xlist=[]
-     fn=msg.find('submit+')
-     msg=msg.strip()[fn+7:len(msg)]
-     if msg.find(ckmsg)>=0:
-       s1=msg.strip().split('\n')
-       for i in s1:
-         if i.find(ckmsg)==0:
-           i=i[2:len(i)]
-           s2=i.split('@')
-           for j in s2:
-            if j in xlist:
-               continue
-            xlist.append(j)
-     if len(xlist)>0:
-       return xlist
-   except Exception as e:
-      msg=str(e)
-      print('msg_clean'+msg)
+
 def bot_che():
    print('\n统计缓存上车')
    other='\n统计缓存上车\n1.【注册权限人数】'+str(len(hd_memlist))+'\n'+'2.【总上车人数】'+str(len(hd_codelist[0]))+'\n'
