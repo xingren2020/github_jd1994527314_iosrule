@@ -47,8 +47,6 @@ uslist=[]
 
 
 
-
-
 #=====================================
 command=['/help','/submit','/start','/zhuce','/admin_delid','/admin_delcode','/admin_viewcode','/admin_reboot']
 description=['帮助功能:','提交功能','圈友查询','注册圈友权限','管理员删除数据库群友id','管理员删除互助码','管理员查询互助码','管理员重启机器人']
@@ -143,7 +141,6 @@ def bot_primsg(res):
      msglist=[]
      i=0
      for data in res['result']:
-        i+=1
         if data['message']['chat']['type']!='private':
            continue
         if 'username' in data['message']['chat']:
@@ -176,11 +173,14 @@ def bot_primsg(res):
       print('bot_primsg'+msg)
 def bot_pubmsg(res):
    try:
+     #print(res)
      for data in res['result']:
-        if data['message']['chat']['type']=='supergroup' and data['message']['text'].find('@Jd_fanbingbingbot')>=0 and data['message']['text'].find('/zhuce')>=0 and str(data['message']['chat']['id'])==str(tg_group_id):
-           id=data['message']['from']['id']
-           if not str(id) in  hd_memlist:
-               hd_memlist.append(str(id))
+       if data['message']['chat']['type']=='supergroup' and str(data['message']['chat']['id'])==str(tg_group_id):
+         handsome=json.dumps(data)
+         if handsome.find('@Jd_fanbingbingbot')>=0 and handsome.find('/zhuce')>=0: 
+              id=data['message']['from']['id']
+              if not str(id) in hd_memlist:
+                  hd_memlist.append(str(id))
      print('注册圈友人数:'+str(len(hd_memlist)))
    except Exception as e:
       msg=str(e)
@@ -573,7 +573,6 @@ def bot_trans():
 def bot_exit():
    print('程序退出写入数据中稍后🔔=======')
    print('检验数据:','数据文件个数:'+str(len(hd_codelist)+1),'活动个数:'+str(len(hd_nm)-1))
-   bot_wr(hd_me[0][0:2],hd_me[0][3:len(hd_nm[0])],hd_memlist)
    for i in range(len(hd_codelist)):
      bot_wr(hd_nm[i][0:2],hd_nm[i][3:len(hd_nm[i])],hd_codelist[i])
    print('程序结束🔔=======')
