@@ -17,8 +17,7 @@ jobs:
       - name: Upload to this repo
         run: |
           git init
+          git config --global user.name "jd1994527314"
+          git config --global user.email "1994527314@qq.com" 
           git remote add iosrule https://gitee.com/jd1994527314/JD_TG.git
-          git pull origin cs --allow-unrelated-histories
-          git add .
-          git commit -m 'init'
-          git push origin cs
+          git push -u origin cs
