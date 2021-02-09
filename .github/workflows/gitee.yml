@@ -19,5 +19,8 @@ jobs:
           git init
           git config --global user.name "jd1994527314"
           git config --global user.email "1994527314@qq.com" 
-          git remote add iosrule https://gitee.com/jd1994527314/JD_TG.git
+          git remote add origin https://gitee.com/jd1994527314/JD_TG.git
           git push -u origin master
+
+
+        
