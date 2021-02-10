@@ -315,7 +315,7 @@ def bot_checkwrong(id,nm,mlist,pop):
              if not me(id):
                return
              postmsg=tback[0]+help_update()
-             bot_sendmsg(id,'帮助功能',postmsg)
+             bot_sendmsg(id,'机器人功能',postmsg)
         elif mlist[0]=='/view':
                if not me(id):
                  return
