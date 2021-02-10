@@ -37,7 +37,7 @@ hd_int_code=[]
 
 
 #远程配置
-heartnum=100
+heartnum=120
 r=2
 
 ac_database=''
@@ -48,7 +48,6 @@ hd_memjson={}
 reset=1
 reboot=1
 #=====================================
-
 
 
 
@@ -583,10 +582,8 @@ def bot_wr(hdnm,des,JDlist):
      JDjson['Update_Time']=datetime.now(tz=tz.gettz('Asia/Shanghai')).strftime("%Y-%m-%d %H:%M:%S.%f", )
      if reset==1:
       if len(JDlist)>0:
-        print(is_me(JDlist))
-        
-        if not is_me(JDlist):
-             random.shuffle(JDlist)
+        if hdnm!='ME':
+           random.shuffle(JDlist)
         JDjson['data']=JDlist
         path=''
         if r==2:
@@ -627,6 +624,8 @@ def bot_rd(hdnm,des):
        if JDjson['code']==200:
          if JDjson['data']==None:
              xlist=[]
+             if hdnm=='ME':
+                xlist={}
          else:
              
              xlist=JDjson['data']
