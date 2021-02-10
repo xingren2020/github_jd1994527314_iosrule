@@ -272,18 +272,16 @@ def bot_checkwrong(id,nm,mlist,pop):
                me(id,1)
     elif pop==2:
       if mlist[0] in command and mlist[1] in command:
-        for i in range(2):
            if mlist[1]=='/function':
              if not me(id):
                return
              postmsg=tback[0]+help_update()
-             bot_sendmsg(id,'帮助功能',postmsg)
-           elif mlist[1]=='/view':
+             bot_sendmsg(id,'机器人功能',postmsg)
+           if mlist[1]=='/view':
                if not me(id):
                   return
                sendview(id)
-              
-           elif mlist[i]=='/zhuce':
+           if mlist[1]=='/zhuce':
                me(id)
       elif mlist[0] in command and mlist[1] not in command:
         if mlist[0]=='/submit':
