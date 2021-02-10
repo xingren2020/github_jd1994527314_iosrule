@@ -37,7 +37,7 @@ hd_int_code=[]
 
 
 #远程配置
-heartnum=120
+heartnum=100
 r=2
 
 
