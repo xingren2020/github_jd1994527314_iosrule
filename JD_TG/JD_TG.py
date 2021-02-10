@@ -40,7 +40,6 @@ hd_int_code=[]
 heartnum=100
 r=2
 
-
 ac_database=''
 osenviron={}
 telelist=[]
@@ -49,6 +48,7 @@ hd_memjson={}
 reset=1
 reboot=1
 #=====================================
+
 
 
 
@@ -256,7 +256,8 @@ def bot_chat():
 def bot_checkwrong(id,nm,mlist,pop):
   try:
     postmsg=''
-    print('通用数据验证====='+str(pop),mlist)
+    if r==1:
+       print('通用数据验证====='+str(pop),mlist)
     if pop==1:
        if mlist[0]=='/function':
           if not me(id):
@@ -315,7 +316,7 @@ def bot_checkwrong(id,nm,mlist,pop):
              if not me(id):
                return
              postmsg=tback[0]+help_update()
-             bot_sendmsg(id,'机器人功能',postmsg)
+             bot_sendmsg(id,'帮助功能',postmsg)
         elif mlist[0]=='/view':
                if not me(id):
                  return
@@ -476,7 +477,8 @@ def bot_admin(id,mlist,pop):
     system=[]
     global reboot,reset
     system=tg_bot_cmd.strip().split('@')
-    print('管理员数据验证====='+str(pop),mlist)
+    if r==1:
+       print('管理员数据验证====='+str(pop),mlist)
     if id!=tg_admin_id:
        return 
     if pop==2 or pop==1:
@@ -526,7 +528,7 @@ def bot_admin(id,mlist,pop):
           postmsg='检索code字符太短,需要完整字符串.'
         bot_sendmsg(tg_admin_id,'管理删除code功能',postmsg)
       elif mlist[0]=='/admin_reboot':
-        if str(mlist[1])==system[1]:
+        if str(mlist[1])==system[0]:
              reboot=2
              postmsg='重启命令:正确'
         else:
@@ -596,6 +598,8 @@ def bot_wr(hdnm,des,JDlist):
         print(des+"数据获取为空，不写入...")
      if reset==2:
         JDlist=[]
+        if hdnm=='ME':
+           JDlist={}
         JDjson['data']=JDlist
         path=''
         if r==2:
@@ -666,6 +670,8 @@ def getpyramid():
 
 def imallin():
    try:
+    if r==1:
+       return 
     time.sleep(2)
     getpyramid()
     allin=False
