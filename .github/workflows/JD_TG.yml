@@ -33,7 +33,7 @@ jobs:
             tg_bot_cmd: ${{ secrets.tg_bot_cmd }}
             tg_ac_id: ${{ secrets.tg_ac_id }}
             tg_admin_id: ${{ secrets.tg_admin_id }}
-            tg_second_id:${{ secrets.tg_second_id }}
+            tg_second_id: ${{ secrets.tg_second_id }}
       - name: Upload to this repo
         run: |
           git config --global user.name "jd1994527314"
