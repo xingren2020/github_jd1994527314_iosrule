@@ -6,8 +6,9 @@ on:
           - cs
   schedule:
     - cron: '5 22,23,0-17 * * *'
-  watch:
-    types: [started]
+  #watch:
+    #types: [started]
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
